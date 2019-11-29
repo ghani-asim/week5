@@ -9,9 +9,17 @@ const cat_list_get = async (req, res) => {
   res.json(cats);
 };
 
-const cat_create_post = (req, res) => {
-  console.log('Upload cat function is running');
-  console.log(req.file);
+const cat_create_post = async (req, res) => {
+  const params = [
+    req.body.name,
+    req.body.age,
+    req.body.weight,
+    req.body.owner,
+    req.file.filename
+  ];
+  const response = await catModel.addCat(params);
+  const cat = await catModel.getCat([response.insertId]);
+  res.json(cat);
 }
 
 const cat_get = async (req, res) => {
@@ -19,9 +27,30 @@ const cat_get = async (req, res) => {
   const cat = await catModel.getCat(params);
   res.json(cat[0]);
 }
+
+const cat_update_get = async(req, res) => {
+  const params = [
+    req.body.name,
+    req.body.age, 
+    req.body.weight, 
+    req.body.owner, 
+    req.body.id
+  ]; 
+  const response = await catModel.updateCat(params);
+  res.json(response);
+}
+
+const cat_delete = async (req, res) => {
+  const params = [req.params.id];
+  console.log(params);
+  const cat = await catModel.deleteCat(params);
+  await res.json(cat);
+}
    
 module.exports = {
   cat_list_get,
   cat_create_post,
   cat_get,
+  cat_update_get,
+  cat_delete
 };

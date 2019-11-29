@@ -7,9 +7,15 @@ const user_list_get = async (req, res) => {
   res.json(users);
 };
 
-const user_create_post = (req, res) => {
-  console.log('Upload cat function is running');
-  console.log(req.file);
+const user_create_post = async (req, res) => {
+  const params = [
+    req.body.name,
+    req.body.email,
+    req.body.passwd
+  ];
+  const response = await userModel.addUser(params);
+  const user = await userModel.getUser([response.insertId]);
+  res.json(user);
 }
 
 const user_get = async (req, res) => {
